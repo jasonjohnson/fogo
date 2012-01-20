@@ -19,6 +19,25 @@ class Example4 {
 	}
 }
 
+class ConstructorExample {
+	var $example;
+	function __construct(Example $example) {
+		$this->example = $example;
+	}
+}
+
+class ConstructorExample2 {
+	var $example;
+	var $example2;
+	function __construct(Example $example) {
+		$this->example = $example;
+	}
+	
+	function setExample2($example2) {
+		$this->example2 = $example2;
+	}
+}
+
 class ContainerTest extends PHPUnit_Framework_TestCase
 {
 	var $container;
@@ -49,13 +68,30 @@ class ContainerTest extends PHPUnit_Framework_TestCase
 	}
 	
 	public function testDependencySetterUsage() {
-		// Example4 depends on Example3.
 		$this->container->add('Example3');
 		$this->container->add('Example4');
 		$e = $this->container->getInstance('Example4');
 		
 		$this->assertTrue(count($this->container->components['Example4']) == 1);
 		$this->assertTrue($this->container->components['Example4'][0] == 'Example3');
+	}
+	
+	public function testConstructorInjection() {
+		$this->container->add('ConstructorExample');
+		$this->container->add('Example');
+		$e = $this->container->getInstance('ConstructorExample');
+		
+		$this->assertTrue(get_class($e->example) == 'Example');
+	}
+	
+	public function testConstructorAndSetterInjection() {
+		$this->container->add('ConstructorExample2');
+		$this->container->add('Example');
+		$this->container->add('Example2');
+		$e = $this->container->getInstance('ConstructorExample2');
+		
+		$this->assertTrue(get_class($e->example) == 'Example');
+		$this->assertTrue(get_class($e->example2) == 'Example2');
 	}
 }
 
