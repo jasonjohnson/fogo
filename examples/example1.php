@@ -1,6 +1,6 @@
 <?php
 
-include 'container.php';
+include '../container.php';
 
 class Person {
 	var $name;
