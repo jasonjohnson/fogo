@@ -10,15 +10,8 @@
  */
 
 class Container {
-	public $prefix;
-	public $prefixLength;
 	public $instances = array();
 	public $components = array();
-	
-	public function __construct($options = array()) {
-		$this->prefix = isset($options['prefix'])?$options['prefix']:'set';
-		$this->prefixLength = strlen($this->prefix);
-	}
 	
 	public function add($name) {
 		$dependencies = array();
@@ -35,7 +28,7 @@ class Container {
 				try {
 					$dependencies[] = $parameter->getClass()->name;
 				} catch(ReflectionException $e) {
-					throw new ClassResolutionException();
+					throw new ClassResolutionException("Could not resolve all dependencies for {$name}");
 				}
 			}
 		}
