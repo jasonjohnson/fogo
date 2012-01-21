@@ -2,41 +2,8 @@
 
 include '../container.php';
 
-class Example {
-}
-
-class Example2 {
-	function set() {}
-}
-
-class Example3 {
-}
-
-class Example4 {
-	var $example3;
-	function setExample3($example3) {
-		$this->example3 = $example3;
-	}
-}
-
-class ConstructorExample {
-	var $example;
-	function __construct(Example $example) {
-		$this->example = $example;
-	}
-}
-
-class ConstructorExample2 {
-	var $example;
-	var $example2;
-	function __construct(Example $example) {
-		$this->example = $example;
-	}
-	
-	function setExample2($example2) {
-		$this->example2 = $example2;
-	}
-}
+// Our local test entities.
+include 'entities.php';
 
 class ContainerTest extends PHPUnit_Framework_TestCase
 {
@@ -92,6 +59,15 @@ class ContainerTest extends PHPUnit_Framework_TestCase
 		
 		$this->assertTrue(get_class($e->example) == 'Example');
 		$this->assertTrue(get_class($e->example2) == 'Example2');
+	}
+	
+	/**
+	 * @expectedException CircularDependencyException 
+	 */
+	public function testCircularDependencyException() {
+		$this->container->add('Circular1');
+		$this->container->add('Circular2');
+		$e = $this->container->getInstance('Circular1');
 	}
 }
 

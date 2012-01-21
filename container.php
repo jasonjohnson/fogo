@@ -53,7 +53,7 @@ class Container {
 	
 	private function resolve($name) {
 		if(!isset($this->components[$name]))
-			throw Exception("Cannot resolve class {$name}");
+			throw new ClassResolutionException("Cannot resolve class {$name}");
 		
 		$dependencies = $this->components[$name];
 		$class = new ReflectionClass($name);
@@ -75,7 +75,7 @@ class Container {
 		
 		foreach($dependencies as $dependency) {
 			if(in_array($name, $this->components[$dependency]))
-				throw Exception("Circular dependency: {$name} <> {$dependency}");
+				throw new CircularDependencyException("Circular dependency: {$name} <> {$dependency}");
 			
 			// Attempt to use setter injection in case we missed something on
 			// the constructor.
@@ -87,5 +87,8 @@ class Container {
 		$this->instances[$name] = $instance;
 	}
 }
+
+class CircularDependencyException extends Exception { /* ... */ }
+class ClassResolutionException extends Exception { /* ... */ }
 
 ?>
