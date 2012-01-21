@@ -45,6 +45,14 @@ class ContainerTest extends PHPUnit_Framework_TestCase
 		$this->container->add('Circular2');
 		$e = $this->container->getInstance('Circular1');
 	}
+	
+	/**
+	 * @expectedException ClassResolutionException 
+	 */
+	public function testUnresolvableDependencyException() {
+		$this->container->add('UnresolvableDependency');
+		$e = $this->container->getInstance('UnresolvableDependency');
+	}
 }
 
 ?>

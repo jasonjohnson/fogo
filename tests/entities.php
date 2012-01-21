@@ -24,4 +24,11 @@ class Circular2 {
 	}
 }
 
+class UnresolvableDependency {
+	var $unresolvable;
+	function __construct(Unresolvable $unresolvable) {
+		$this->unresolvable = $unresolvable;
+	}
+}
+
 ?>

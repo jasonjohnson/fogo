@@ -31,8 +31,13 @@ class Container {
 		}
 		
 		if($constructor) {
-			foreach($constructor->getParameters() as $parameter)
-				$dependencies[] = $parameter->getClass()->name;
+			foreach($constructor->getParameters() as $parameter) {
+				try {
+					$dependencies[] = $parameter->getClass()->name;
+				} catch(ReflectionException $e) {
+					throw new ClassResolutionException();
+				}
+			}
 		}
 		
 		$this->components[$name] = $dependencies;
@@ -45,9 +50,6 @@ class Container {
 	}
 	
 	private function resolve($name) {
-		if(!isset($this->components[$name]))
-			throw new ClassResolutionException("Cannot resolve class {$name}");
-		
 		$args = array();
 		$dependencies = $this->components[$name];
 		
