@@ -29,36 +29,12 @@ class ContainerTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($e1 !== $e2);
 	}
 	
-	public function testMethodSkippedMatchingPrefixName() {
-		$this->container->add('Example2');
-		$this->assertTrue(count($this->container->components['Example2']) == 0);
-	}
-	
-	public function testDependencySetterUsage() {
-		$this->container->add('Example3');
-		$this->container->add('Example4');
-		$e = $this->container->getInstance('Example4');
-		
-		$this->assertTrue(count($this->container->components['Example4']) == 1);
-		$this->assertTrue($this->container->components['Example4'][0] == 'Example3');
-	}
-	
 	public function testConstructorInjection() {
 		$this->container->add('ConstructorExample');
 		$this->container->add('Example');
 		$e = $this->container->getInstance('ConstructorExample');
 		
 		$this->assertTrue(get_class($e->example) == 'Example');
-	}
-	
-	public function testConstructorAndSetterInjection() {
-		$this->container->add('ConstructorExample2');
-		$this->container->add('Example');
-		$this->container->add('Example2');
-		$e = $this->container->getInstance('ConstructorExample2');
-		
-		$this->assertTrue(get_class($e->example) == 'Example');
-		$this->assertTrue(get_class($e->example2) == 'Example2');
 	}
 	
 	/**

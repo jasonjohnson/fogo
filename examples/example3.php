@@ -10,11 +10,8 @@ class Invoice {
 	var $ledger;
 	var $product;
 	
-	function setLedger($ledger) {
+	function __construct(Ledger $ledger, Product $product) {
 		$this->ledger = $ledger;
-	}
-	
-	function setProduct($product) {
 		$this->product = $product;
 	}
 }
@@ -22,7 +19,7 @@ class Invoice {
 class Product {
 	var $ledger;
 	
-	function setLedger($ledger) {
+	function __construct(Ledger $ledger) {
 		$this->ledger = $ledger;
 	}
 }

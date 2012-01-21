@@ -3,13 +3,12 @@
 include 'container.php';
 
 class Ledger {
-	
 }
 
 class Invoice {
 	var $ledger;
 	
-	function setLedger($ledger) {
+	function __construct(Ledger $ledger) {
 		$this->ledger = $ledger;
 	}
 }

@@ -10,8 +10,8 @@ class Ledger {
 // An Invoice, nothing more.
 class Invoice {
 	var $ledger;
-
-	function setLedger($ledger) {
+	
+	function __construct(Ledger $ledger) {
 		$this->ledger = $ledger;
 	}
 }
@@ -25,13 +25,11 @@ $ledger = new Ledger();
 
 // Now create a few Invoices. This is "manual injection" and it is fine
 // but you can see it really won't scale (from a programmers point of view).
-$invoice1 = new Invoice();
-$invoice1->setLedger($ledger);
+$invoice1 = new Invoice($ledger);
 
 // Also, notice this is a different object. We have $invoice1 and $invoice2.
 // If this contains critical business logic, what if they get out of sync?
-$invoice2 = new Invoice();
-$invoice1->setLedger($ledger);
+$invoice2 = new Invoice($ledger);
 
 
 
@@ -42,7 +40,7 @@ $invoice1->setLedger($ledger);
 // Create a new "bucket" or "service." This will include references to
 // all the classes which make up a unit of business logic. (Like creating
 // invoices!)
-$contaner = new Container();
+$container = new Container();
 
 // We aren't creating new classes, just adding their names to a list we
 // can reference when we call for them later.

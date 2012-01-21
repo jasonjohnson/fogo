@@ -22,24 +22,17 @@ class Container {
 	
 	public function add($name) {
 		$dependencies = array();
-		$class = new ReflectionClass($name);
-		$methods = $class->getMethods();
+		$constructor = null;
 		
-		foreach($methods as $method) {
-			// Skip if we're looking at a method matching our prefix exactly.
-			if($method->name == $this->prefix)
-				continue;
-			
-			// Reflect the constructor parameters, looking for type hints.
-			if($method->name == '__construct') {
-				foreach($method->getParameters() as $parameter)
-					$dependencies[] = $parameter->getClass()->name;
-			}
-			
-			// Infer the type of the object to be injected by the remainder
-			// of the method name.
-			if(substr($method->name, 0, $this->prefixLength) == $this->prefix)
-				$dependencies[] = substr($method->name, $this->prefixLength);
+		try {
+			$constructor = new ReflectionMethod($name, '__construct');
+		} catch(ReflectionException $e) {
+			// This is fine, simply means we will not be injecting anything.
+		}
+		
+		if($constructor) {
+			foreach($constructor->getParameters() as $parameter)
+				$dependencies[] = $parameter->getClass()->name;
 		}
 		
 		$this->components[$name] = $dependencies;
@@ -55,34 +48,17 @@ class Container {
 		if(!isset($this->components[$name]))
 			throw new ClassResolutionException("Cannot resolve class {$name}");
 		
-		$dependencies = $this->components[$name];
-		$class = new ReflectionClass($name);
 		$args = array();
-		$constructor = null;
-		
-		try {
-			$constructor = $class->getMethod('__construct');
-		} catch(ReflectionException $e) {
-			echo $e->getMessage() . PHP_EOL;
-		}
-		
-		if($constructor) {
-			foreach($constructor->getParameters() as $parameter)
-				$args[] = $this->getInstance($parameter->getClass()->name);
-		}
-		
-		$instance = $class->newInstanceArgs($args);
+		$dependencies = $this->components[$name];
 		
 		foreach($dependencies as $dependency) {
 			if(in_array($name, $this->components[$dependency]))
 				throw new CircularDependencyException("Circular dependency: {$name} <> {$dependency}");
-			
-			// Attempt to use setter injection in case we missed something on
-			// the constructor.
-			$method = "set{$dependency}";
-			if($class->hasMethod($method))
-				$class->getMethod($method)->invoke($instance, $this->getInstance($dependency));
+			$args[] =  $this->getInstance($dependency);
 		}
+		
+		$class = new ReflectionClass($name);
+		$instance = $class->newInstanceArgs($args);
 		
 		$this->instances[$name] = $instance;
 	}
