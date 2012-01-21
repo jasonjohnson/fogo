@@ -29,7 +29,7 @@ class ContainerTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($e1 !== $e2);
 	}
 	
-	public function testMethodSkippedMatchingFlagName() {
+	public function testMethodSkippedMatchingPrefixName() {
 		$this->container->add('Example2');
 		$this->assertTrue(count($this->container->components['Example2']) == 0);
 	}
