@@ -53,11 +53,11 @@ class Container {
 	
 	private function resolve($name) {
 		if(!isset($this->components[$name]))
-			die("Cannot resolve class {$name}");
+			throw Exception("Cannot resolve class {$name}");
 		
 		$dependencies = $this->components[$name];
-		$args = array();
 		$class = new ReflectionClass($name);
+		$args = array();
 		$constructor = null;
 		
 		try {
@@ -75,13 +75,13 @@ class Container {
 		
 		foreach($dependencies as $dependency) {
 			if(in_array($name, $this->components[$dependency]))
-				die("Circular dependency: {$name} <> {$dependency}");
+				throw Exception("Circular dependency: {$name} <> {$dependency}");
 			
 			// Attempt to use setter injection in case we missed something on
 			// the constructor.
 			$method = "set{$dependency}";
-			if(method_exists($instance, $method))
-				call_user_method($method, $instance, $this->getInstance($dependency));
+			if($class->hasMethod($method))
+				$class->getMethod($method)->invoke($instance, $this->getInstance($dependency));
 		}
 		
 		$this->instances[$name] = $instance;
