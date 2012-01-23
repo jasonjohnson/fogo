@@ -31,4 +31,21 @@ class UnresolvableDependency {
 	}
 }
 
+interface ExampleInterface {
+	function exampleMethod();
+}
+
+class ExampleImplementation implements ExampleInterface {
+	function exampleMethod() {
+		return true;
+	}
+}
+
+class ExampleUsingInterface {
+	var $example;
+	function __construct(ExampleInterface $example) {
+		$this->example = $example;
+	}
+}
+
 ?>

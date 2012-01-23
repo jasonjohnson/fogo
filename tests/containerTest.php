@@ -53,6 +53,16 @@ class ContainerTest extends PHPUnit_Framework_TestCase
 		$this->container->add('UnresolvableDependency');
 		$e = $this->container->getInstance('UnresolvableDependency');
 	}
+	
+	public function testInterfaceInjection() {
+		$this->container->add('ExampleUsingInterface');
+		$this->container->addImplementation('ExampleInterface', 'ExampleImplementation');
+		$e1 = $this->container->getInstance('ExampleUsingInterface');
+		$e2 = $this->container->getInstance('ExampleUsingInterface');
+		
+		$this->assertTrue(get_class($e1) == 'ExampleUsingInterface');
+		$this->assertTrue($e1->example === $e2->example);
+	}
 }
 
 ?>

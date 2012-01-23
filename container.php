@@ -10,6 +10,7 @@
  */
 
 class Container {
+	public $interfaces = array();
 	public $instances = array();
 	public $components = array();
 	
@@ -36,6 +37,16 @@ class Container {
 		$this->components[$name] = $dependencies;
 	}
 	
+	public function addImplementation($interface, $implementation) {
+		$class = new ReflectionClass($implementation);
+		
+		if(!$class->implementsInterface($interface))
+			throw new IncorrectImplementationException("{$implementation} does not implement {$interface}");
+		
+		$this->add($implementation);
+		$this->interfaces[$interface] = $implementation;
+	}
+	
 	public function getInstance($name) {
 		if(!isset($this->instances[$name]))
 			$this->resolve($name);
@@ -47,6 +58,9 @@ class Container {
 		$dependencies = $this->components[$name];
 		
 		foreach($dependencies as $dependency) {
+			if(array_key_exists($dependency, $this->interfaces))
+				$dependency = $this->interfaces[$dependency];
+			
 			if(in_array($name, $this->components[$dependency]))
 				throw new CircularDependencyException("Circular dependency: {$name} <> {$dependency}");
 			$args[] =  $this->getInstance($dependency);
@@ -61,5 +75,6 @@ class Container {
 
 class CircularDependencyException extends Exception { /* ... */ }
 class ClassResolutionException extends Exception { /* ... */ }
+class IncorrectImplementationException extends Exception { /* ... */ }
 
 ?>

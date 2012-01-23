@@ -28,3 +28,35 @@ $invoice = $container->getInstance('Invoice');
 
 ?>
 ```
+
+Fogo also supports interface injection, a staple feature of other containers supporting Inversion of Control (IoC).
+
+```php
+<?php
+
+include 'container.php';
+
+interface Connection {
+	function connect();
+}
+
+class MySQLConnection implements Connection {
+	function connect() { /* ...connect! */ }
+}
+
+class Controller {
+	var $connection;
+	
+	function __construct(Connection $connection) {
+		$this->connection = $connection;
+	}
+}
+
+$container = new Container();
+$container->add('Controller');
+$container->addImplementation('Connection', 'MySQLConnection');
+
+$controller = $container->getInstance('Controller');
+
+?>
+```
