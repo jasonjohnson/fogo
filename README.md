@@ -29,7 +29,7 @@ $invoice = $container->getInstance('Invoice');
 ?>
 ```
 
-Fogo also supports interface injection, a staple feature of other containers supporting Inversion of Control (IoC).
+Fogo also supports interface injection, a staple feature of other containers supporting Inversion of Control (IoC). Example #5 goes into detail about this feature, but the example below touches on it briefly.
 
 ```php
 <?php
