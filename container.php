@@ -47,6 +47,14 @@ class Container {
 		$this->interfaces[$interface] = $implementation;
 	}
 	
+	public function addInstance($instance) {
+		$class = new ReflectionObject($instance);
+		$name = $class->getName();
+		
+		if(!isset($this->instances[$name]))
+			$this->instances[$name] = $instance;
+	}
+	
 	public function getInstance($name) {
 		if(!isset($this->instances[$name]))
 			$this->resolve($name);

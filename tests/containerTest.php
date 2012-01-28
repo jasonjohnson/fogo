@@ -63,6 +63,14 @@ class ContainerTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue(get_class($e1) == 'ExampleUsingInterface');
 		$this->assertTrue($e1->example === $e2->example);
 	}
+	
+	public function testInstanceInjection() {
+		$this->container->addInstance(new Example());
+		$e1 = $this->container->getInstance('Example');
+		$e2 = $this->container->getInstance('Example');
+		
+		$this->assertTrue($e1 === $e2);
+	}
 }
 
 ?>
