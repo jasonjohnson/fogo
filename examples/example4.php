@@ -3,23 +3,22 @@
 include '../container.php';
 
 // This will hold all our Invoices, and any meta-data we need.
-class Ledger {
-	
-}
+class Ledger { }
 
 // An Invoice, nothing more.
-class Invoice {
-	var $ledger;
-	
-	function __construct(Ledger $ledger) {
-		$this->ledger = $ledger;
-	}
+class Invoice
+{
+    var $ledger;
+
+    public function __construct(Ledger $ledger)
+    {
+        $this->ledger = $ledger;
+    }
 }
 
 /**
  * We're going to start with a manually wired version.
  */
-
 // We'll create a new ledger.
 $ledger = new Ledger();
 
@@ -36,7 +35,6 @@ $invoice2 = new Invoice($ledger);
 /**
  * Now for the Dependency Injection container version.
  */
-
 // Create a new "bucket" or "service." This will include references to
 // all the classes which make up a unit of business logic. (Like creating
 // invoices!)
@@ -53,7 +51,6 @@ $invoice = $container->getInstance('Invoice');
 // What just happened? Our container scanned the Invoice class, realized
 // it needed a Ledger. It created a new Ledger object and "injected" it
 // using our $invoice->setLedger($ledger) method for us. No manual wiring!
-
 // Now, for the good part.
 $ledger = $container->getInstance('Ledger');
 

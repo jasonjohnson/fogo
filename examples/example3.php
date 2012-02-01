@@ -2,26 +2,28 @@
 
 include '../container.php';
 
-class Ledger {
-	
+class Ledger { }
+
+class Invoice
+{
+    var $ledger;
+    var $product;
+
+    public function __construct(Ledger $ledger, Product $product)
+    {
+        $this->ledger = $ledger;
+        $this->product = $product;
+    }
 }
 
-class Invoice {
-	var $ledger;
-	var $product;
-	
-	function __construct(Ledger $ledger, Product $product) {
-		$this->ledger = $ledger;
-		$this->product = $product;
-	}
-}
+class Product
+{
+    var $ledger;
 
-class Product {
-	var $ledger;
-	
-	function __construct(Ledger $ledger) {
-		$this->ledger = $ledger;
-	}
+    public function __construct(Ledger $ledger)
+    {
+        $this->ledger = $ledger;
+    }
 }
 
 /**
@@ -31,7 +33,6 @@ class Product {
  * Product depends on Ledger;
  * Invoice depends on both Ledger and Product. 
  */
-
 $container = new Container();
 $container->add('Invoice');
 $container->add('Ledger');
@@ -47,5 +48,3 @@ echo spl_object_hash($product->ledger) . PHP_EOL;
 // The container maintains an index of registered components and
 // their depdenencies. It checks for circular associations.
 print_r($container);
-
-?>

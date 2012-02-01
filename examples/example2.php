@@ -2,15 +2,17 @@
 
 include '../container.php';
 
-class Ledger {
-}
+class Ledger { }
 
-class Invoice {
-	var $ledger;
-	
-	function __construct(Ledger $ledger) {
-		$this->ledger = $ledger;
-	}
+class Invoice
+{
+    var $ledger;
+
+    public function __construct(Ledger $ledger)
+    {
+        $this->ledger = $ledger;
+    }
+
 }
 
 /**
@@ -18,7 +20,6 @@ class Invoice {
  * 
  * Invoice depends on Ledger. 
  */
-
 $container = new Container();
 $container->add('Invoice');
 $container->add('Ledger');
@@ -26,5 +27,3 @@ $container->add('Ledger');
 $invoice = $container->getInstance('Invoice');
 
 print_r($invoice);
-
-?>

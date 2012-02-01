@@ -6,18 +6,20 @@ Fogo uses PHP's built-in type hinting to inject dependencies directly into your 
 
 ```php
 <?php
-
 include 'container.php';
 
 class Ledger {
+    
 }
 
 class Invoice {
+
     var $ledger;
-    
+
     function __construct(Ledger $ledger) {
         $this->ledger = $ledger;
     }
+
 }
 
 $container = new Container();
@@ -25,7 +27,6 @@ $container->add('Ledger');
 $container->add('Invoice');
 
 $invoice = $container->getInstance('Invoice');
-
 ?>
 ```
 
@@ -33,23 +34,28 @@ Fogo also supports interface injection, a staple feature of other containers sup
 
 ```php
 <?php
-
 include 'container.php';
 
 interface Connection {
-	function connect();
+
+    function connect();
 }
 
 class MySQLConnection implements Connection {
-	function connect() { /* ...connect! */ }
+
+    function connect() { /* ...connect! */
+    }
+
 }
 
 class Controller {
-	var $connection;
-	
-	function __construct(Connection $connection) {
-		$this->connection = $connection;
-	}
+
+    var $connection;
+
+    function __construct(Connection $connection) {
+        $this->connection = $connection;
+    }
+
 }
 
 $container = new Container();
@@ -57,6 +63,5 @@ $container->add('Controller');
 $container->addImplementation('Connection', 'MySQLConnection');
 
 $controller = $container->getInstance('Controller');
-
 ?>
 ```
