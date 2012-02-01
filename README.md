@@ -94,7 +94,7 @@ class Controller
 $logger = new Logger('../logs', 'error');
 $container = new Container();
 $container->add('Controller');
-$container->add($logger);
+$container->addInstance($logger);
 
 $controller = $container->getInstance('Controller');
 
