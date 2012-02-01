@@ -1,8 +1,8 @@
 <?php
 /**
- * "Fogo"
+ * Fogo
  * 
- * A prototype for a micro Dependency Injection (DI) Container.
+ * A lightweight dependency injection container.
  * 
  * @license MIT License
  * @copyright Copyright (c) 2012, Jason Johnson <jason@period-three.com>
@@ -29,13 +29,17 @@ class Container
         if ($constructor) {
             foreach ($constructor->getParameters() as $parameter) {
                 try {
-                    $dependencies[] = $parameter->getClass()->name;
+                    $class = $parameter->getClass();
+                    
+                    if($class != null) {
+                        $dependencies[] = $class->name;
+                    }
                 } catch (ReflectionException $e) {
                     throw new ClassResolutionException("Could not resolve all dependencies for {$name}");
                 }
             }
         }
-
+        
         $this->components[$name] = $dependencies;
     }
 
@@ -57,6 +61,7 @@ class Container
         $name = $class->getName();
 
         if (!isset($this->instances[$name])) {
+            $this->components[$name] = array();
             $this->instances[$name] = $instance;
         }
     }

@@ -12,7 +12,7 @@ class Ledger { }
 
 class Invoice
 {
-    var $ledger;
+    private $ledger;
 
     public function __construct(Ledger $ledger)
     {
@@ -47,7 +47,7 @@ class MySQLConnection implements Connection
 
 class Controller
 {
-    var $connection;
+    private $connection;
 
     public function __construct(Connection $connection)
     {
@@ -60,5 +60,43 @@ $container->add('Controller');
 $container->addImplementation('Connection', 'MySQLConnection');
 
 $controller = $container->getInstance('Controller');
+?>
+```
+
+Instance injection is also supported. You may need this if an external resource must be configured prior to injection.
+
+```php
+<?php
+include 'container.php';
+
+class Logger
+{
+    private $basePath;
+    private $logLevel;
+    
+    public function __construct($basePath = '', $logLevel = 'warn')
+    {
+        $this->basePath = $basePath;
+        $this->logLevel = $logLevel;
+    }
+}
+
+class Controller
+{
+    private $logger;
+    
+    public function __construct(Logger $logger)
+    {
+        $this->logger = $logger;
+    }
+}
+
+$logger = new Logger('../logs', 'error');
+$container = new Container();
+$container->add('Controller');
+$container->add($logger);
+
+$controller = $container->getInstance('Controller');
+
 ?>
 ```

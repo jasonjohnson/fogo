@@ -66,3 +66,25 @@ class ExampleUsingInterface
         $this->example = $example;
     }
 }
+
+class Logger
+{
+    private $basePath;
+    private $logLevel;
+    
+    public function __construct($basePath = '', $logLevel = 'warn')
+    {
+        $this->basePath = $basePath;
+        $this->logLevel = $logLevel;
+    }
+}
+
+class Controller
+{
+    private $logger;
+    
+    public function __construct(Logger $logger)
+    {
+        $this->logger = $logger;
+    }
+}

@@ -79,4 +79,17 @@ class ContainerTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue($e1 === $e2);
     }
+    
+    public function testInstanceDependencyUsage()
+    {
+        $logger1 = new Logger('../logs', 'error');
+        $container = new Container();
+        $container->add('Controller');
+        $container->addInstance($logger1);
+        
+        $controller = $container->getInstance('Controller');
+        $logger2 = $container->getInstance('Logger');
+        
+        $this->assertTrue($logger1 === $logger2);
+    }
 }
